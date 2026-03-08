@@ -1,6 +1,10 @@
 #!/usr/bin/env node
+
 /**
  * OverlayFS Manager - Test Suite
+ * Copyright (c) 2024 OverlayFS Manager Contributors
+ *
+ * SPDX-License-Identifier: MIT
  */
 
 const assert = require('assert');

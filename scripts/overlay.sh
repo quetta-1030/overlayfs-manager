@@ -1,6 +1,7 @@
 #!/bin/sh
 # OverlayFS Manager - Read-Only Root Filesystem Utility
-# Copyright (C) 2024 OverlayFS Manager Contributors
+# Copyright (c) 2024 OverlayFS Manager Contributors
+# SPDX-License-Identifier: MIT
 # https://github.com/quetta-1030/overlayfs-manager
 
 [ -f /scripts/config.sh ] && {

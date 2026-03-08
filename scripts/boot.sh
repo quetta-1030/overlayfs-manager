@@ -1,7 +1,8 @@
 #!/bin/sh
 # OverlayFS Manager - Boot Script
 # Executed by systemd boot.service during system startup
-# Copyright (C) 2024 OverlayFS Manager Contributors
+# Copyright (c) 2024 OverlayFS Manager Contributors
+# SPDX-License-Identifier: MIT
 # https://github.com/quetta-1030/overlayfs-manager
 
 . /scripts/config.sh

@@ -2,7 +2,9 @@
 
 /**
  * OverlayFS Manager - Interactive Install Script
- * Copyright (C) 2024 OverlayFS Manager Contributors
+ * Copyright (c) 2024 OverlayFS Manager Contributors
+ *
+ * SPDX-License-Identifier: MIT
  */
 
 const chalk = require('chalk');

@@ -1,6 +1,7 @@
 #!/bin/sh
 # OverlayFS Manager - Configuration File
-# Copyright (C) 2024 OverlayFS Manager Contributors
+# Copyright (c) 2024 OverlayFS Manager Contributors
+# SPDX-License-Identifier: MIT
 # https://github.com/quetta-1030/overlayfs-manager
 
 # =============================================================================

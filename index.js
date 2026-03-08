@@ -1,6 +1,8 @@
 /**
  * OverlayFS Manager - Main Entry Point
- * Copyright (C) 2024 OverlayFS Manager Contributors
+ * Copyright (c) 2024 OverlayFS Manager Contributors
+ *
+ * SPDX-License-Identifier: MIT
  */
 
 const OverlayFSManager = require('./lib/overlayfs');
