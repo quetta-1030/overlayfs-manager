@@ -1,0 +1,15 @@
+[Unit]
+Description=OverlayFS boot service
+Documentation=https://github.com/quetta-1030/overlayfs-manager
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=systemd-modules-load.service local-fs.target
+Before=sysinit.target shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/scripts/boot.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

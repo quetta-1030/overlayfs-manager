@@ -1,0 +1,15 @@
+[Unit]
+Description=OverlayFS read-only root service
+Documentation=https://github.com/quetta-1030/overlayfs-manager
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=systemd-modules-load.service
+Before=sysinit.target shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/scripts/boot.sh ro_root
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

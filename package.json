@@ -1,0 +1,42 @@
+{
+  "name": "overlayfs-manager",
+  "version": "1.0.0",
+  "description": "A lightweight overlayfs manager for creating read-only root filesystem on Linux",
+  "main": "index.js",
+  "bin": {
+    "overlayfs-manager": "./bin/cli.js",
+    "ovm": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js",
+    "install-system": "node bin/install.js",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "overlayfs",
+    "overlay",
+    "read-only",
+    "rootfs",
+    "linux",
+    "systemd",
+    "filesystem"
+  ],
+  "author": "Open Source Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quetta-1030/overlayfs-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/quetta-1030/overlayfs-manager/issues"
+  },
+  "homepage": "https://github.com/quetta-1030/overlayfs-manager#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "shelljs": "^0.8.5",
+    "gradient-string": "^2.0.2"
+  }
+}
