@@ -3,44 +3,157 @@
 [![npm version](https://img.shields.io/npm/v/overlayfs-manager.svg)](https://www.npmjs.org/package/overlayfs-manager)
 [![npm downloads](https://img.shields.io/npm/dm/overlayfs-manager.svg)](https://www.npmjs.org/package/overlayfs-manager)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/quetta-1030/overlayfs-manager)](https://github.com/quetta-1030/overlayfs-manager/stargazers)
 
-A lightweight utility for managing overlayfs-based read-only root filesystem on Linux systems.
+> **A powerful utility for creating read-only root filesystem on Linux using OverlayFS technology.**
+
+![OverlayFS Manager Banner](https://via.placeholder.com/800x200/4A90D9/FFFFFF?text=OverlayFS+Manager+-+Secure+Your+Linux+System)
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [How It Works](#how-it-works)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Command Reference](#command-reference)
+- [Configuration](#configuration)
+- [Architecture](#architecture)
+- [Use Cases](#use-cases)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+**OverlayFS Manager** transforms your Linux system into a secure, read-only environment using OverlayFS technology. Perfect for:
+
+- 🔒 **Security-hardened systems** - Prevent unauthorized modifications
+- 🖥️ **Edge devices** - Protect against accidental corruption
+- 🏭 **Production servers** - Maintain consistent system state
+- 📦 **Kiosk systems** - Lock down public-facing devices
+
+![Overview](https://via.placeholder.com/800x300/2ECC71/FFFFFF?text=Transform+Your+Linux+Into+Read-Only+System)
+
+---
 
 ## Features
 
-- 🔒 **Read-Only Root** - Transform your system into a read-only state for enhanced security
-- 🔄 **Easy Recovery** - Reset to clean state with a single command
-- 🛠️ **Maintenance Mode** - Temporarily enable write access for updates
-- 📦 **Simple Installation** - Interactive TUI installer
-- ⚡ **Fast Boot** - Minimal impact on system startup time
+| Feature | Description |
+|---------|-------------|
+| 🔒 **Read-Only Root** | System runs in read-only mode by default |
+| 🔄 **One-Click Reset** | Factory reset with a single command |
+| 🛠️ **Maintenance Mode** | Temporarily enable writes for updates |
+| 📊 **Progress UI** | Visual progress bars during installation |
+| ⚡ **Fast Boot** | Minimal impact on startup time |
+| 🎯 **TUI Installer** | Interactive terminal-based setup wizard |
 
-## Why OverlayFS?
+![Features](https://via.placeholder.com/800x200/3498DB/FFFFFF?text=Secure+%7C+Reliable+%7C+Easy+to+Use)
 
-OverlayFS is a union filesystem that allows you to overlay one directory on top of another. This project uses it to:
-- Keep the base system read-only and immutable
-- Store all changes in a separate writable layer
-- Enable instant factory reset by clearing the writable layer
+---
 
-## Prerequisites
+## How It Works
 
-- **OS**: CentOS 7, RHEL 7, or compatible distributions
-- **Kernel**: 3.10.0-690 or higher (with overlay module support)
-- **Node.js**: 14.x or higher (for CLI tool)
-- **Root**: sudo/root access required
+OverlayFS Manager uses Linux OverlayFS to create a union filesystem layer:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        SYSTEM BOOT                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ┌─────────────┐      ┌─────────────┐      ┌─────────────┐   │
+│   │   /etc      │      │   /var      │      │   /tmp      │   │
+│   │  (overlay)  │      │  (overlay)  │      │  (overlay)  │   │
+│   └──────┬──────┘      └──────┬──────┘      └──────┬──────┘   │
+│          │                    │                    │           │
+│          ├───────┬────────────┼────────┬───────────┤           │
+│          │       │            │        │           │           │
+│   ┌──────▼────┐ ┌▼──────┐ ┌──▼────┐ ┌▼──────┐ ┌───▼────┐     │
+│   │ lowerdir  │ │ upper │ │ work  │ │ clear │ │ persist│     │
+│   │ (read-only│ │(writes│ │(meta  │ │(boot  │ │(overlay│     │
+│   │  system)  │ │ here) │ │ data) │ │ clean)│ │  store)│     │
+│   └───────────┘ └───────┘ └───────┘ └───────┘ └────────┘     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Boot Flow Diagram
+
+```
+                              ┌─────────────┐
+                              │ Power On    │
+                              └──────┬──────┘
+                                     │
+                              ┌──────▼──────┐
+                              │   Kernel    │
+                              └──────┬──────┘
+                                     │
+                              ┌──────▼──────┐
+                              │  systemd    │
+                              └──────┬──────┘
+                                     │
+                    ┌────────────────┼────────────────┐
+                    │                │                │
+           ┌────────▼────────┐ ┌────▼────┐ ┌────────▼────────┐
+           │ boot.service    │ │ other   │ │ readonly.service│
+           │ (create overlay)│ │ services│ │ (remount root)  │
+           └────────┬────────┘ └─────────┘ └────────┬────────┘
+                    │                                │
+                    └────────────────┬───────────────┘
+                                     │
+                              ┌──────▼──────┐
+                              │   System    │
+                              │    Ready    │
+                              │ (Read-Only) │
+                              └─────────────┘
+```
+
+---
+
+## System Requirements
+
+### Minimum Requirements
+
+| Component | Requirement |
+|-----------|-------------|
+| **OS** | CentOS 7, RHEL 7, AlmaLinux 8+, Rocky Linux 8+ |
+| **Kernel** | 3.10.0-690 or higher |
+| **RAM** | 512MB minimum, 1GB+ recommended |
+| **Disk** | 5GB+ for overlay partition |
+| **Node.js** | 14.x or higher (for CLI) |
+
+### Compatibility Matrix
+
+![Compatibility](https://via.placeholder.com/800x150/9B59B6/FFFFFF?text=CentOS+7+%7C+RHEL+7+%7C+AlmaLinux+8+%7C+Rocky+Linux+8)
+
+```bash
+# Check your kernel version
+uname -r
+
+# Check overlay support
+modinfo overlay
+```
+
+---
 
 ## Installation
 
-### Quick Install (npm)
+### Method 1: npm (Recommended)
 
 ```bash
 # Install globally
-npm install -g overlayfs-manager
+sudo npm install -g overlayfs-manager
 
-# Run installer
-sudo ovm install
+# Verify installation
+ovm --version
 ```
 
-### Manual Install
+### Method 2: From Source
 
 ```bash
 # Clone the repository
@@ -54,132 +167,454 @@ npm install
 sudo npm run install-system
 ```
 
-### Interactive Install
+### Installation Steps Diagram
 
-```bash
-sudo ovm install --interactive
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    INSTALLATION PROCESS                       │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│  [1] System Check ──────────► Verify OS & Kernel             │
+│       │                                                          │
+│       ▼                                                          │
+│  [2] Dependencies ──────────► Install fuse3, fuse-overlayfs    │
+│       │                                                          │
+│       ▼                                                          │
+│  [3] Kernel Module ─────────► Load overlay module              │
+│       │                                                          │
+│       ▼                                                          │
+│  [4] Copy Scripts ──────────► Deploy to /scripts               │
+│       │                                                          │
+│       ▼                                                          │
+│  [5] Configure Systemd ─────► Enable boot services              │
+│       │                                                          │
+│       ▼                                                          │
+│  [6] Create Symlink ────────► /usr/bin/ovm                     │
+│       │                                                          │
+│       ▼                                                          │
+│  [7] Complete ──────────────► Reboot required                   │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
 ```
 
-## Usage
+---
 
-### Command Reference
+## Quick Start
 
-| Command | Description |
-|---------|-------------|
-| `ovm install` | Install overlayfs manager |
-| `ovm status` | Check current status |
-| `ovm reset` | Reset overlay (clear all changes) |
-| `ovm maintain on` | Enable maintenance mode (writable) |
-| `ovm maintain off` | Disable maintenance mode (read-only) |
-| `ovm uninstall` | Remove overlayfs manager |
+```bash
+# 1. Install OverlayFS Manager
+sudo ovm install
 
-### Examples
+# 2. (Optional) Interactive installation with prompts
+sudo ovm install --interactive
+
+# 3. Check status
+ovm status
+
+# 4. Reboot to activate
+sudo reboot
+```
+
+### First Boot Experience
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  OverlayFS Manager v1.0.0                                   │
+│  https://github.com/quetta-1030/overlayfs-manager           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Status: ✓ INSTALLED                                        │
+│                                                             │
+│  System is running in READ-ONLY mode.                       │
+│  All changes are stored in /overlay partition.              │
+│                                                             │
+│  Commands:                                                  │
+│    ovm reset          - Reset to factory state              │
+│    ovm maintain on    - Enable write mode for updates       │
+│    ovm maintain off   - Return to read-only mode            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Command Reference
+
+### All Commands
+
+```bash
+ovm <command> [options]
+
+Commands:
+  install             Install OverlayFS Manager to the system
+  status              Check current installation status
+  reset               Reset overlay (clear all changes since install)
+  maintain on         Enable maintenance mode (writable filesystem)
+  maintain off        Disable maintenance mode (read-only filesystem)
+  uninstall           Completely remove OverlayFS Manager
+  --help, -h          Show help information
+  --version, -v       Show version number
+```
+
+### Command Flow Diagram
+
+```
+                              ┌─────────────┐
+                              │   ovm cmd   │
+                              └──────┬──────┘
+                                     │
+         ┌─────────────┬─────────────┼─────────────┬─────────────┐
+         │             │             │             │             │
+    ┌────▼────┐   ┌────▼────┐  ┌─────▼─────┐ ┌────▼────┐  ┌─────▼─────┐
+    │ install │   │ status  │  │   reset   │ │ maintain│  │ uninstall │
+    └────┬────┘   └────┬────┘  └─────┬─────┘ └────┬────┘  └─────┬─────┘
+         │             │             │             │             │
+         ▼             ▼             ▼             ▼             ▼
+    ┌─────────┐  ┌─────────┐  ┌───────────┐ ┌─────────┐  ┌───────────┐
+    │ Deploy  │  │ Display │  │ Clear     │ │ Toggle  │  │ Remove    │
+    │ Scripts │  │ Status  │  │ /overlay  │ │ R/W     │  │ Everything│
+    │ & Svc   │  │         │  │ upperdir  │ │ Mode    │  │           │
+    └─────────┘  └─────────┘  └───────────┘ └─────────┘  └───────────┘
+```
+
+### Usage Examples
 
 ```bash
 # Check installation status
-ovm status
+$ ovm status
+Status: ✓ INSTALLED
+System is running in read-only mode.
 
 # Install with interactive prompts
-sudo ovm install
+$ sudo ovm install --interactive
+=== OverlayFS Manager Installer ===
+? Overlay partition mount point: /overlay
+? Directories to overlay: /etc, /var, /tmp, /usr/local
+? Clear /tmp on boot? Yes
+Ready to install. Continue? Yes
+✓ Installation complete!
 
 # Reset to factory state
-sudo ovm reset
+$ sudo ovm reset
+This will reset all overlay changes. Continue? (y/N) y
+✓ Overlay reset complete.
 
-# Enable maintenance mode for system updates
-sudo ovm maintain on
-# ... make changes ...
-sudo ovm maintain off
+# Enable maintenance mode for updates
+$ sudo ovm maintain on
+✓ Maintenance mode enabled.
+Reboot to apply. System will be writable.
 
-# Uninstall completely
-sudo ovm uninstall
+# After updates, return to read-only
+$ sudo ovm maintain off
+✓ Maintenance mode disabled.
+Reboot to apply. System will be read-only.
 ```
+
+---
 
 ## Configuration
 
-Edit `/etc/overlayfs-manager/config.sh` to customize:
+### Configuration File
+
+Edit `/scripts/config.sh` to customize behavior:
 
 ```bash
-# Directories to overlay (will be writable)
-OVERLAY_DIR_CONFIG="/etc /var /tmp /usr/local"
+#!/bin/sh
+# User Configuration Section
 
-# Directories to clear on boot
+# Additional device mount points
+APP_DEV_CONFIG="/data /app"
+
+# Directories to overlay (appear writable)
+OVERLAY_DIR_CONFIG="/etc /var /tmp /usr/local $APP_DEV_CONFIG"
+
+# Directories to clear on each boot
 CLEAR_DIR_CONFIG="/tmp /var/log /var/crash /var/cache"
 
 # Partitions to fsck on boot
 FSCK_CONFIG="/boot /overlay"
-
-# Additional mount points
-APP_DEV_CONFIG="/data /app"
 ```
 
-## Architecture
+### Configuration Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      System Boot                             │
+│                    CONFIGURATION LAYERS                      │
 ├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Root (/) ←─── overlayfs ───→ /overlay (writable layer)     │
-│     │                              │                         │
-│     ├─ /etc (ro) ←─── upper ───────┤                         │
-│     ├─ /var (ro) ←─── upper ───────┤                         │
-│     ├─ /tmp (ro) ←─── upper ───────┤                         │
-│     └─ /usr/local (ro) ←─ upper ───┤                         │
-│                                                              │
-│  Changes → written to /overlay/.<dir>/upper                  │
-│  Reset   → rm -rf /overlay/.*/upper/*                        │
-│                                                              │
+│                                                             │
+│  APP_DEV_CONFIG (Custom mount points)                       │
+│  └── /data, /app                                            │
+│         │                                                   │
+│         ▼                                                   │
+│  OVERLAY_DIR_CONFIG (Writable directories)                  │
+│  ├── /etc (system config)                                   │
+│  ├── /var (variable data)                                   │
+│  ├── /tmp (temporary files)                                 │
+│  └── /usr/local (local software)                            │
+│         │                                                   │
+│         ▼                                                   │
+│  CLEAR_DIR_CONFIG (Cleared on boot)                         │
+│  ├── /tmp                                                   │
+│  ├── /var/log                                               │
+│  └── /var/cache                                             │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## API (Node.js)
+---
 
-```javascript
-const OverlayFSManager = require('overlayfs-manager');
+## Architecture
 
-const ovm = new OverlayFSManager();
+### System Architecture
 
-// Check status
-const status = await ovm.getStatus();
-console.log(status); // 'installed' | 'uninstalled' | 'maintaining'
-
-// Reset overlay
-await ovm.reset();
-
-// Toggle maintenance mode
-await ovm.setMaintenanceMode(true);
 ```
+┌────────────────────────────────────────────────────────────────────┐
+│                          USER SPACE                                 │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐            │
+│  │   ovm CLI    │  │  Node.js API │  │  Shell Scripts│            │
+│  │  (cli.js)    │  │ (overlayfs.js│  │  (overlay.sh) │            │
+│  └──────────────┘  └──────────────┘  └──────────────┘            │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                         SERVICE LAYER                               │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌────────────────────┐         ┌────────────────────┐            │
+│  │  boot.service      │         │  readonly.service  │            │
+│  │  (create overlay)  │         │  (remount root)    │            │
+│  └────────────────────┘         └────────────────────┘            │
+│                                                                    │
+├────────────────────────────────────────────────────────────────────┤
+│                        KERNEL LAYER                                 │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌────────────────────────────────────────────────────┐           │
+│  │              OverlayFS Kernel Module               │           │
+│  └────────────────────────────────────────────────────┘           │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### Directory Structure
+
+```
+overlayfs-manager/
+├── 📁 bin/                    # Node.js CLI tools
+│   ├── cli.js                 # Main command-line interface
+│   └── install.js             # Interactive installer
+├── 📁 lib/                    # Node.js API library
+│   └── overlayfs.js           # Programmatic interface
+├── 📁 scripts/                # Shell scripts
+│   ├── overlay.sh             # Main management script
+│   ├── boot.sh                # Boot-time script
+│   ├── config.sh              # Configuration file
+│   └── 📁 service/            # systemd service files
+│       ├── boot.service       # Boot service
+│       └── readonly.service   # Read-only service
+├── 📁 packages/               # RPM dependencies
+│   ├── fuse3-libs-*.rpm
+│   └── fuse-overlayfs-*.rpm
+├── 📄 README.md               # This file
+├── 📄 MANUAL.md               # Detailed user manual
+├── 📄 package.json            # npm configuration
+└── 📁 test/                   # Test suite
+    ├── test.js                # Unit tests
+    └── REPORT.md              # Test report
+```
+
+---
+
+## Use Cases
+
+### 1. Edge Computing Devices
+
+![Edge](https://via.placeholder.com/600x150/E74C3C/FFFFFF?text=Protect+Edge+Devices+From+Corruption)
+
+```bash
+# Scenario: Prevent filesystem corruption on remote devices
+# Solution: Read-only root with overlay for /etc, /var
+```
+
+### 2. Security-Hardened Servers
+
+![Security](https://via.placeholder.com/600x150/E67E22/FFFFFF?text=Prevent+Unauthorized+Modifications)
+
+```bash
+# Scenario: Prevent unauthorized system modifications
+# Solution: Base system read-only, changes auditable in /overlay
+```
+
+### 3. Kiosk Systems
+
+![Kiosk](https://via.placeholder.com/600x150/F1C40F/FFFFFF?text=Lock+Down+Public+Terminals)
+
+```bash
+# Scenario: Public-facing terminals need consistent state
+# Solution: Factory reset on each boot with CLEAR_DIR_CONFIG
+```
+
+### 4. Production Environments
+
+![Production](https://via.placeholder.com/600x150/27AE60/FFFFFF?text=Maintain+Consistent+System+State)
+
+```bash
+# Scenario: Maintain consistent production state
+# Solution: Maintenance mode for controlled updates
+```
+
+---
 
 ## Troubleshooting
 
-### Kernel module not loaded
-```bash
-# Load overlay module
-sudo modprobe overlay
+### Common Issues
 
-# Make it persistent
-echo "overlay" | sudo tee /etc/modules-load.d/overlay.conf
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TROUBLESHOOTING GUIDE                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Issue: System won't boot after install                         │
+│  ─────────────────────────────────────────────                  │
+│  Solution:                                                      │
+│  1. Boot into single-user mode                                  │
+│  2. mount -o rw,remount /                                       │
+│  3. mv /scripts/boot.sh /scripts/boot.sh.bak                    │
+│  4. reboot                                                      │
+│                                                                 │
+│  Issue: overlay module not found                                │
+│  ─────────────────────────────────────────────                  │
+│  Solution:                                                      │
+│  1. yum update kernel                                           │
+│  2. reboot                                                      │
+│  3. modprobe overlay                                            │
+│                                                                 │
+│  Issue: Permission denied                                       │
+│  ─────────────────────────────────────────────                  │
+│  Solution: Use sudo or run as root                              │
+│  1. sudo ovm install                                            │
+│                                                                 │
+│  Issue: System still writable after install                     │
+│  ─────────────────────────────────────────────                  │
+│  Solution: Check service status                                 │
+│  1. systemctl status boot.service                               │
+│  2. systemctl status readonly.service                           │
+│  3. journalctl -u boot.service                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Permission denied
-Ensure you're running with sudo/root privileges.
+### Diagnostic Commands
 
-### Boot issues
-Boot into single-user mode and run:
 ```bash
-/scripts/overlay.sh maintain on
+# Check overlay status
+ovm status
+
+# Check kernel module
+lsmod | grep overlay
+
+# Check mount points
+mount | grep overlay
+
+# Check services
+systemctl status boot.service
+systemctl status readonly.service
+
+# View boot logs
+journalctl -u boot.service -u readonly.service
 ```
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+We welcome contributions! Here's how you can help:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   CONTRIBUTING WORKFLOW                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. Fork the repository                                     │
+│         │                                                   │
+│         ▼                                                   │
+│  2. Create feature branch (git checkout -b feature/amazing) │
+│         │                                                   │
+│         ▼                                                   │
+│  3. Make changes & test                                     │
+│         │                                                   │
+│         ▼                                                   │
+│  4. Commit (git commit -m 'Add amazing feature')            │
+│         │                                                   │
+│         ▼                                                   │
+│  5. Push (git push origin feature/amazing)                  │
+│         │                                                   │
+│         ▼                                                   │
+│  6. Open Pull Request                                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Areas We Need Help
+
+- 📝 Documentation improvements
+- 🧪 Test coverage
+- 🎨 UI/UX enhancements
+- 🐛 Bug fixes
+- 📦 Package maintenance
+
+---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      MIT LICENSE                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Copyright (c) 2024 OverlayFS Manager Contributors          │
+│                                                             │
+│  Permission is hereby granted, free of charge, to any       │
+│  person obtaining a copy of this software and associated    │
+│  documentation files (the "Software"), to deal in the       │
+│  Software without restriction, including without limitation │
+│  the rights to use, copy, modify, merge, publish,           │
+│  distribute, sublicense, and/or sell copies of the          │
+│  Software, and to permit persons to whom the Software is    │
+│  furnished to do so, subject to the following conditions:   │
+│                                                             │
+│  The above copyright notice and this permission notice      │
+│  shall be included in all copies or substantial portions    │
+│  of the Software.                                           │
+│                                                             │
+│  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF      │
+│  ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED    │
+│  TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A        │
+│  PARTICULAR PURPOSE AND NONINFRINGEMENT.                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## Acknowledgments
+---
 
-- OverlayFS kernel developers
-- systemd project
-- All contributors
+## Links & Resources
+
+- 📖 [Full Manual](MANUAL.md)
+- 🐛 [Issue Tracker](https://github.com/quetta-1030/overlayfs-manager/issues)
+- 📦 [npm Package](https://www.npmjs.com/package/overlayfs-manager)
+- 📄 [Contributing Guide](CONTRIBUTING.md)
+- 📋 [Changelog](CHANGELOG.md)
+
+---
+
+<div align="center">
+
+**OverlayFS Manager** - Securing Linux Systems Since 2024
+
+[![GitHub stars](https://img.shields.io/github/stars/quetta-1030/overlayfs-manager?style=social)](https://github.com/quetta-1030/overlayfs-manager/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/quetta-1030/overlayfs-manager?style=social)](https://github.com/quetta-1030/overlayfs-manager/network)
+
+Made with ❤️ by the OverlayFS Manager Contributors
+
+</div>
