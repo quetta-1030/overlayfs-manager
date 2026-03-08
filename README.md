@@ -1,9 +1,9 @@
 # OverlayFS Manager
 
-[![npm version](https://img.shields.io/npm/v/overlayfs-manager.svg)](https://www.npmjs.org/package/overlayfs-manager)
-[![npm downloads](https://img.shields.io/npm/dm/overlayfs-manager.svg)](https://www.npmjs.org/package/overlayfs-manager)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/quetta-1030/overlayfs-manager)](https://github.com/quetta-1030/overlayfs-manager/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/quetta-1030/overlayfs-manager)](https://github.com/quetta-1030/overlayfs-manager/network)
+[![npm version](https://img.shields.io/npm/v/overlayfs-manager.svg)](https://www.npmjs.org/package/overlayfs-manager)
 
 > **A powerful utility for creating read-only root filesystem on Linux using OverlayFS technology.**
 
@@ -604,9 +604,6 @@ We welcome contributions! Here's how you can help:
 
 **OverlayFS Manager** - Securing Linux Systems Since 2024
 
-[![GitHub stars](https://img.shields.io/github/stars/quetta-1030/overlayfs-manager?style=social)](https://github.com/quetta-1030/overlayfs-manager/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/quetta-1030/overlayfs-manager?style=social)](https://github.com/quetta-1030/overlayfs-manager/network)
-
-Made with ❤️ by the OverlayFS Manager Contributors
+Made with ❤️ by qutta1e30
 
 </div>

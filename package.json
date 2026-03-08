@@ -21,7 +21,7 @@
     "systemd",
     "filesystem"
   ],
-  "author": "Open Source Contributors",
+  "author": "qutta1e30 <qutta1e30@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
