@@ -7,7 +7,6 @@
 
 > **A powerful utility for creating read-only root filesystem on Linux using OverlayFS technology.**
 
-![OverlayFS Manager Banner](https://via.placeholder.com/800x200/4A90D9/FFFFFF?text=OverlayFS+Manager+-+Secure+Your+Linux+System)
 
 ---
 
@@ -38,7 +37,6 @@
 - 🏭 **Production servers** - Maintain consistent system state
 - 📦 **Kiosk systems** - Lock down public-facing devices
 
-![Overview](https://via.placeholder.com/800x300/2ECC71/FFFFFF?text=Transform+Your+Linux+Into+Read-Only+System)
 
 ---
 
@@ -53,7 +51,6 @@
 | ⚡ **Fast Boot** | Minimal impact on startup time |
 | 🎯 **TUI Installer** | Interactive terminal-based setup wizard |
 
-![Features](https://via.placeholder.com/800x200/3498DB/FFFFFF?text=Secure+%7C+Reliable+%7C+Easy+to+Use)
 
 ---
 
@@ -129,7 +126,6 @@ OverlayFS Manager uses Linux OverlayFS to create a union filesystem layer:
 
 ### Compatibility Matrix
 
-![Compatibility](https://via.placeholder.com/800x150/9B59B6/FFFFFF?text=CentOS+7+%7C+RHEL+7+%7C+AlmaLinux+8+%7C+Rocky+Linux+8)
 
 ```bash
 # Check your kernel version
@@ -430,7 +426,6 @@ overlayfs-manager/
 
 ### 1. Edge Computing Devices
 
-![Edge](https://via.placeholder.com/600x150/E74C3C/FFFFFF?text=Protect+Edge+Devices+From+Corruption)
 
 ```bash
 # Scenario: Prevent filesystem corruption on remote devices
@@ -439,7 +434,6 @@ overlayfs-manager/
 
 ### 2. Security-Hardened Servers
 
-![Security](https://via.placeholder.com/600x150/E67E22/FFFFFF?text=Prevent+Unauthorized+Modifications)
 
 ```bash
 # Scenario: Prevent unauthorized system modifications
@@ -448,7 +442,6 @@ overlayfs-manager/
 
 ### 3. Kiosk Systems
 
-![Kiosk](https://via.placeholder.com/600x150/F1C40F/FFFFFF?text=Lock+Down+Public+Terminals)
 
 ```bash
 # Scenario: Public-facing terminals need consistent state
@@ -457,7 +450,6 @@ overlayfs-manager/
 
 ### 4. Production Environments
 
-![Production](https://via.placeholder.com/600x150/27AE60/FFFFFF?text=Maintain+Consistent+System+State)
 
 ```bash
 # Scenario: Maintain consistent production state
